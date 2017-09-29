@@ -1,0 +1,5 @@
+FROM baseimage04:latest   
+WORKDIR /home/agent 
+RUN  curl -L https://github.com/wyp0596/docker-installer/releases/download/v1.0.0/docker-compose.tar.gz > docker-compose.tar.gz && tar -xzf docker-compose.tar.gz && cd docker-compose  
+#RUN chmod +x install.sh
+RUN sh install.sh

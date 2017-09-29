@@ -1,0 +1,65 @@
+FROM ubuntu:16.04
+
+# defaults - override them using --build-arg
+#ARG AGENT_URL=https://github.com/Microsoft/vsts-agent/releases/Downloads/vsts-agent-ubuntu.16.04-x64-2.122.1.tar.gz
+#ARG AGENT_NAME=docker
+#ARG AGENT_POOL=default
+
+# you must supply these to the build command using --build-arg
+#ARG VSTS_URL
+#ARG USERNAME
+#ARG PWD
+
+# install git
+#RUN apt-get update && apt-get -y install software-properties-common && apt-add-repository ppa:git-core/ppa
+RUN apt-get update && apt-get -y install git
+RUN apt-get install python-software-properties -y
+RUN apt-get install software-properties-common -y
+RUN add-apt-repository ppa:git-core/ppa -y
+RUN apt-get update -y
+RUN apt-get upgrade -y
+RUN apt-get install git -y
+
+
+RUN apt-get update && apt-get -y install libstdc++6
+RUN apt-get install -y libunwind8 libcurl3 libicu55 curl apt-transport-https ca-certificates
+#RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash 
+#RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
+
+
+
+
+
+
+
+#install docker 
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg |  apt-key add -
+RUN  add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+RUN apt-get update
+RUN apt-get install docker-ce -y
+
+RUN useradd -ms /bin/bash agent
+USER agent
+WORKDIR /home/agent
+
+
+
+# download the agent tarball
+#RUN curl -Lo agent.tar.gz $AGENT_URL && tar xvf agent.tar.gz && rm agent.tar.gz
+#COPY *.tar.gz .
+#RUN tar xzf *.tar.gz && rm -f *.tar.gz
+
+#RUN curl -LO https://github.com/Microsoft/vsts-agent/releases/download/v2.116.1/vsts-agent-ubuntu.16.04-x64-2.116.1.tar.gz -o agent.tgz && mkdir agent && cd agent && tar xzf ../agent.tgz && chown -R root:root . && cd .. && rm agent.tgz
+#RUN mkdir myagent 
+#RUN cd myagent
+
+
+RUN curl -LO https://github.com/Microsoft/vsts-agent/releases/download/v2.122.1/vsts-agent-ubuntu.16.04-x64-2.122.1.tar.gz
+#COPY *.tar.gz .
+#RUN tar xzf *.tar.gz
+#RUN  bin/Agent.Listener configure  --url $VSTS_URL   --agent Agent --pool default --acceptTeeEula --auth negotiate --userName azureuser --password P2ssw0rd@123  --unattended
+
+#ENTRYPOINT ./run.sh
